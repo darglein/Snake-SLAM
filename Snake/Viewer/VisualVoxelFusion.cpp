@@ -99,7 +99,6 @@ void VisualFusion::Render(Camera* cam)
         {
             voxel_blocks_ready = 3;
         }
-        //        teapot.render(cam);
     }
 
     if (voxel_blocks_ready == 3)
@@ -108,23 +107,6 @@ void VisualFusion::Render(Camera* cam)
 
         if (mesh_ready == 1)
         {
-            //            TriangleMesh<VertexNC, uint32_t> mesh;
-
-            //            for (auto t : triangle_soup)
-            //            {
-            //                VertexNC verts[3];
-
-            //                for (int i = 0; i < 3; ++i)
-            //                {
-            //                    verts[i].position = make_vec4(t[i], 1);
-            //                    verts[i].color    = gray_color;
-            //                }
-
-            //                mesh.addTriangle(verts);
-            //            }
-
-            //            mesh.computePerVertexNormal();
-            //            AssetLoader assetLoader;
             tri_asset          = std::make_shared<ColoredAsset>(mesh);
             mesh_ready         = 2;
             voxel_blocks_ready = 4;
