@@ -1,0 +1,9 @@
+eval_out/
+imgui.ini
+build*/
+cmake-build*/
+CMakeLists.txt.user
+.idea/
+.cmake/
+meshes/
+scenes/

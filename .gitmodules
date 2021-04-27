@@ -1,0 +1,3 @@
+[submodule "External/saiga"]
+	path = External/saiga
+	url = ../saiga.git
