@@ -1,0 +1,17 @@
+﻿/**
+ * Copyright (c) 2017 Darius Rückert
+ * Licensed under the MIT License.
+ * See LICENSE file for more information.
+ */
+
+#pragma once
+
+#cmakedefine SNAKE_DEBUG_ASAN
+#cmakedefine SNAKE_DEBUG_TSAN
+
+#cmakedefine SNAKE_MOBILE
+#cmakedefine SNAKE_CUDA
+
+#if defined SNAKE_DEBUG_ASAN || defined SNAKE_DEBUG_TSAN
+#    define SNAKE_DEBUG_ASAN
+#endif
