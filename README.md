@@ -70,12 +70,18 @@ playback_fps = 30
 
 ## Publication
 
-This project belongs to the paper:
+Rückert, Darius, and Marc Stamminger. "Snake-SLAM: Efficient Global Visual Inertial SLAM using Decoupled Nonlinear Optimization." Proceedings of the 2021 International Conference on Unmanned Aircraft Systems (ICUAS), Athen 2021.
 
-**Snake-SLAM: Efficient Global Visual Inertial SLAM Using Decoupled Nonlinear Optimization**\
-Darius Rückert, Marc Stamminger  
+https://ieeexplore.ieee.org/abstract/document/9476760
 
-Bibtex:
 ```
-(coming soon)
+@INPROCEEDINGS{9476760,
+  author={Rückert, Darius and Stamminger, Marc},
+  booktitle={2021 International Conference on Unmanned Aircraft Systems (ICUAS)}, 
+  title={Snake-SLAM: Efficient Global Visual Inertial SLAM using Decoupled Nonlinear Optimization}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={219-228},
+  doi={10.1109/ICUAS51884.2021.9476760}}
 ```
