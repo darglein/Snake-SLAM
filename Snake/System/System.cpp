@@ -332,7 +332,7 @@ void System::SaveSublonet()
                 depth_short(k, l) = iRound(d);
             }
         }
-        LibPNG::save(depth_file, depth_short, false, LibPNG::Compression::best);
+        depth_short.save(depth_file);
 
 
         {

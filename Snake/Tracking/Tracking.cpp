@@ -51,11 +51,11 @@ void Tracking::run()
             }
 
 
-            //            while (pause)
-            //            {
-            //                localMapping->UpdateViewer();
-            //                std::this_thread::sleep_for(std::chrono::milliseconds(30));
-            //            }
+            while (is_dataset && pause)
+            {
+                localMapping->UpdateViewer();
+                std::this_thread::sleep_for(std::chrono::milliseconds(30));
+            }
 
             while (tracking_barrier)
             {

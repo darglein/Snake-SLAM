@@ -192,7 +192,7 @@ void LocalBundleAdjustment::MakeLocalScene(KeyFrame* kf)
             scene.bf = stereo_cam.bf;
         }
 
-        Intrinsics4 intr = K;
+        IntrinsicsPinholed intr = K;
         scene.intrinsics.push_back(intr);
 
 

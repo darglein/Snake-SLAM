@@ -54,15 +54,17 @@ struct ViewerSettings
     Saiga::vec3 color_graph = Saiga::vec3(0, 0, 1);
 
 
-    bool renderInput      = true;
-    bool renderPoints     = true;
-    bool renderCurrentCam = true;
-    bool renderKeyframes  = true;
-    bool renderFrames     = false;
-    bool renderEdges      = true;
-    bool renderVelocity   = false;
-    bool smoothCamera     = true;
-    bool followCamera     = true;
+    bool renderBoundingbox = false;
+    bool renderFloor       = true;
+    bool renderInput       = true;
+    bool renderPoints      = true;
+    bool renderCurrentCam  = true;
+    bool renderKeyframes   = true;
+    bool renderFrames      = false;
+    bool renderEdges       = true;
+    bool renderVelocity    = false;
+    bool smoothCamera      = true;
+    bool followCamera      = true;
 
     void fromConfigFile(const std::string& file);
     void imgui();

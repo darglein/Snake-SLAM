@@ -16,7 +16,7 @@
 namespace Snake
 {
 double scale                   = 1;
-static vec3 defaultRelPosition = vec3(0, 1, 4) * scale;
+static vec3 defaultRelPosition = vec3(0, 0.5, 4) * scale;
 static quat defaultRelRotation = quat::Identity();
 
 SnakeOpenGLViewer::SnakeOpenGLViewer(const ViewerSettings& vparams, const std::string& config)
@@ -48,9 +48,7 @@ SnakeOpenGLViewer::SnakeOpenGLViewer(const ViewerSettings& vparams, const std::s
     offset_camera.rotationPoint = vec3(0, 0, 0);
     offset_camera.calculateModel();
 
-    renderer->params.clearColor = vec4(1, 1, 1, 1);
     renderer->timer->Enable(false);
-
 
 
     render_camera.setProj(70.0f, aspect, 0.1f, 200.0f, false);
@@ -72,7 +70,6 @@ SnakeOpenGLViewer::SnakeOpenGLViewer(const ViewerSettings& vparams, const std::s
     frustum = std::make_shared<LineVertexColoredAsset>(
         FrustumCVLineMesh(Snake::K.matrix().cast<float>(), 0.1 * scale, 640, 480).SetVertexColor(vec4(1, 1, 1, 1)));
 
-    pointCloud.screen_point_size = params.PointSize;
     lineSoup.lineWidth           = params.GraphLineWidth;
 
     sun = std::make_shared<DirectionalLight>();
@@ -114,15 +111,19 @@ void SnakeOpenGLViewer::update(float dt)
         // offset_camera.rotationPoint = bounding_box.getPosition();
 
 
-        pointCloud.points.clear();
+        UnifiedMesh point_mesh;
         for (auto wp : map->points)
         {
             PointVertex v;
             v.position = wp.cast<float>();
             v.color    = params.color_points;
-            pointCloud.points.push_back(v);
+            vec4 color(1,1,1,1);
+            color.head<3>() = v.color;
+
+            point_mesh.position.push_back(v.position);
+            point_mesh.color.push_back(color);
         }
-        pointCloud.updateBuffer();
+        pointCloud = std::make_shared<GLPointCloud>(point_mesh);
 
 
         lineSoup.lines.clear();
@@ -229,14 +230,17 @@ void SnakeOpenGLViewer::interpolate(float dt, float interpolation)
     }
 }
 
-void SnakeOpenGLViewer::render(Camera* cam, RenderPass render_pass)
+void SnakeOpenGLViewer::render(RenderInfo render_info)
 {
-    if (render_pass == RenderPass::Deferred || render_pass == RenderPass::Shadow)
+    if (render_info.render_pass == RenderPass::Deferred || render_info.render_pass == RenderPass::Shadow)
     {
-        groundPlane.render(cam);
-        scene.Render(cam);
+        if (params.renderFloor)
+        {
+            groundPlane.render(render_info.camera);
+        }
+        scene.Render(render_info.camera);
     }
-    if (render_pass == RenderPass::Forward || render_pass == RenderPass::Shadow)
+    if (render_info.render_pass == RenderPass::Forward)
     {
         // skybox.render(cam, CV2GLView());
 
@@ -245,33 +249,35 @@ void SnakeOpenGLViewer::render(Camera* cam, RenderPass render_pass)
 
 
         glLineWidth(4);
-        if (render_pass == RenderPass::Shadow) glLineWidth(2);
+        if (render_info.render_pass == RenderPass::Shadow) glLineWidth(2);
 
 
-        mat4 bounding_box_transform =
-            Saiga::translate(smooth_bounding_box.getPosition()) * Saiga::scale(smooth_bounding_box.Size() * 0.5);
-        bounding_box_mesh->SetShaderColor(vec4(1, 1, 1, 1));
-        bounding_box_mesh->renderForward(cam, bounding_box_transform);
-
-
-        if (params.renderPoints)
+        if (params.renderBoundingbox)
         {
-            pointCloud.screen_point_size = params.PointSize;
-            if (render_pass == RenderPass::Shadow) pointCloud.screen_point_size = 2;
-            pointCloud.render(cam);
+            mat4 bounding_box_transform =
+                Saiga::translate(smooth_bounding_box.getPosition()) * Saiga::scale(smooth_bounding_box.Size() * 0.5);
+            bounding_box_mesh->SetShaderColor(vec4(1, 1, 1, 1));
+            bounding_box_mesh->renderForward(render_info.camera, bounding_box_transform);
+        }
+
+
+        if (params.renderPoints && pointCloud)
+        {
+            pointCloud->point_size = params.PointSize;
+            if (render_info.render_pass == RenderPass::Shadow) pointCloud->point_size = 2;
+            pointCloud->render(render_info);
         }
 
         if (params.renderEdges)
         {
             lineSoup.lineWidth = params.GraphLineWidth;
-            lineSoup.render(cam);
+            lineSoup.render(render_info.camera);
         }
-        //    velocityLines.render(cam);
 
         if (params.renderVelocity)
         {
             velocityLines.lineWidth = 3;
-            velocityLines.render(cam);
+            velocityLines.render(render_info.camera);
         }
 
         // current
@@ -280,7 +286,7 @@ void SnakeOpenGLViewer::render(Camera* cam, RenderPass render_pass)
         {
             mat4 m = currentPose.matrix().cast<float>();
             frustum->SetShaderColor(vec4(0, 1, 1, 1));
-            frustum->renderForward(cam, m);
+            frustum->renderForward(render_info.camera, m);
         }
 
 
@@ -307,7 +313,7 @@ void SnakeOpenGLViewer::render(Camera* cam, RenderPass render_pass)
                     {
                         frustum->SetShaderColor(make_vec4(params.color_keyframes, 1));
                     }
-                    frustum->renderForward(cam, m);
+                    frustum->renderForward(render_info.camera, m);
                 }
             }
             if (params.renderFrames)
@@ -317,30 +323,21 @@ void SnakeOpenGLViewer::render(Camera* cam, RenderPass render_pass)
                 {
                     if (!f.valid) continue;
                     mat4 m = f.pose.matrix().cast<float>() * Saiga::scale(make_vec3(0.3));
-                    frustum->renderForward(cam, m);
+                    frustum->renderForward(render_info.camera, m);
                 }
             }
         }
-    }
-    else if (render_pass == RenderPass::GUI)
-    {
-        // The final render path (after post processing).
-        // Usually the GUI is rendered here.
 
-        static bool showSaigaGui = false;
-        auto ws                  = ImGui::GetIO().DisplaySize;
-
-
-        float inputH = 240;
-        //    float inputH = 600;
-
+        float inputH = 380;
         if (params.renderInput && texture)
         {
             float ratio  = float(texture->getWidth()) / texture->getHeight();
             float inputW = ratio * inputH;
-            display.render(texture.get(), {0, ws.y - inputH}, {inputW, inputH});
+            display.render(texture.get(), {0, renderer->viewport_size.y() - inputH}, {inputW, inputH});
         }
-
+    }
+    else if (render_info.render_pass == RenderPass::GUI)
+    {
         if (ImGui::Begin("Viewer"))
         {
             if (ImGui::CollapsingHeader("Fusion"))
@@ -378,8 +375,6 @@ void SnakeOpenGLViewer::render(Camera* cam, RenderPass render_pass)
             }
 
             params.imgui();
-            ImGui::Checkbox("showSaigaGui", &showSaigaGui);
-
             if (ImGui::Checkbox("view_shading", &view_shading))
             {
                 sun->castShadows = !view_shading;

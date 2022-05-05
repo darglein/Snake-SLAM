@@ -35,7 +35,7 @@ class SnakeOpenGLViewer : public StandaloneWindow<WindowManagement::GLFW, Deferr
     Object3D interCam;
     Object3D interCam2;
 
-    GLPointCloud pointCloud;
+    std::shared_ptr<GLPointCloud> pointCloud;
     LineSoup lineSoup;
     LineSoup velocityLines, velocityLines2;
     std::shared_ptr<LineVertexColoredAsset> frustum;
@@ -61,7 +61,7 @@ class SnakeOpenGLViewer : public StandaloneWindow<WindowManagement::GLFW, Deferr
     void interpolate(float dt, float interpolation) override;
 
 
-    void render(Camera* cam, RenderPass render_pass) override;
+    void render(RenderInfo render_info) override;
 
     void keyPressed(int key, int scancode, int mods) override;
 

@@ -18,23 +18,25 @@ void ViewerSettings::fromConfigFile(const std::string& file)
     Saiga::SimpleIni ini;
     ini.LoadFile(file.c_str());
 
-    INI_GETADD_BOOL(ini, "Viewer", enabled);
-    INI_GETADD_DOUBLE(ini, "Viewer", KeyFrameSize);
-    INI_GETADD_DOUBLE(ini, "Viewer", KeyFrameLineWidth);
-    INI_GETADD_DOUBLE(ini, "Viewer", GraphLineWidth);
-    INI_GETADD_DOUBLE(ini, "Viewer", PointSize);
-    INI_GETADD_DOUBLE(ini, "Viewer", CameraLineWidth);
+    INI_GETADD(ini, "Viewer", enabled);
+    INI_GETADD(ini, "Viewer", KeyFrameSize);
+    INI_GETADD(ini, "Viewer", KeyFrameLineWidth);
+    INI_GETADD(ini, "Viewer", GraphLineWidth);
+    INI_GETADD(ini, "Viewer", PointSize);
+    INI_GETADD(ini, "Viewer", CameraLineWidth);
 
-    INI_GETADD_BOOL(ini, "Viewer", renderInput);
-    INI_GETADD_BOOL(ini, "Viewer", renderPoints);
-    INI_GETADD_BOOL(ini, "Viewer", renderCurrentCam);
-    INI_GETADD_BOOL(ini, "Viewer", renderKeyframes);
-    INI_GETADD_BOOL(ini, "Viewer", renderFrames);
-    INI_GETADD_BOOL(ini, "Viewer", renderEdges);
-    INI_GETADD_BOOL(ini, "Viewer", renderVelocity);
+    INI_GETADD(ini, "Viewer", renderBoundingbox);
+    INI_GETADD(ini, "Viewer", renderFloor);
+    INI_GETADD(ini, "Viewer", renderInput);
+    INI_GETADD(ini, "Viewer", renderPoints);
+    INI_GETADD(ini, "Viewer", renderCurrentCam);
+    INI_GETADD(ini, "Viewer", renderKeyframes);
+    INI_GETADD(ini, "Viewer", renderFrames);
+    INI_GETADD(ini, "Viewer", renderEdges);
+    INI_GETADD(ini, "Viewer", renderVelocity);
 
-    INI_GETADD_BOOL(ini, "Viewer", smoothCamera);
-    INI_GETADD_BOOL(ini, "Viewer", followCamera);
+    INI_GETADD(ini, "Viewer", smoothCamera);
+    INI_GETADD(ini, "Viewer", followCamera);
 
     if (ini.changed()) ini.SaveFile(file.c_str());
 }
@@ -51,6 +53,8 @@ void ViewerSettings::imgui()
     ImGui::ColorEdit3("color_keyframes", color_keyframes.data());
     ImGui::ColorEdit3("color_graph", color_graph.data());
 
+    ImGui::Checkbox("renderBoundingbox", &renderBoundingbox);
+    ImGui::Checkbox("renderFloor", &renderFloor);
     ImGui::Checkbox("renderInput", &renderInput);
     ImGui::Checkbox("renderPoints", &renderPoints);
     ImGui::Checkbox("renderEdges", &renderEdges);
@@ -68,7 +72,7 @@ Settings::Settings(const std::string& file)
     config_file = file;
     {
         auto group = "Global";
-        INI_GETADD_LONG_COMMENT(ini, group, randomSeed, "# 0 == Time based random");
+        INI_GETADD_COMMENT(ini, group, randomSeed, "# 0 == Time based random");
 
 
         if (randomSeed == 0)
@@ -77,14 +81,14 @@ Settings::Settings(const std::string& file)
         }
 
 
-        INI_GETADD_STRING(ini, group, evalDir);
-        INI_GETADD_STRING(ini, group, out_file_prefix);
-        INI_GETADD_LONG(ini, group, num_tracking_threads);
-        INI_GETADD_BOOL(ini, group, async);
-        INI_GETADD_BOOL(ini, group, async_lba);
-        INI_GETADD_BOOL(ini, group, start_paused);
-        INI_GETADD_BOOL(ini, group, keep_valid_depth_image);
-        INI_GETADD_BOOL(ini, group, keep_all_frame_data);
+        INI_GETADD(ini, group, evalDir);
+        INI_GETADD(ini, group, out_file_prefix);
+        INI_GETADD(ini, group, num_tracking_threads);
+        INI_GETADD(ini, group, async);
+        INI_GETADD(ini, group, async_lba);
+        INI_GETADD(ini, group, start_paused);
+        INI_GETADD(ini, group, keep_valid_depth_image);
+        INI_GETADD(ini, group, keep_all_frame_data);
     }
 
     {
@@ -110,37 +114,37 @@ Settings::Settings(const std::string& file)
         sensorType       = static_cast<SensorType>(sensorTypeId);
 
 
-        INI_GETADD_STRING(ini, group, voc_file);
+        INI_GETADD(ini, group, voc_file);
     }
 
     {
         auto group = "FeatureDetector";
-        INI_GETADD_LONG(ini, group, fd_features);
-        INI_GETADD_LONG(ini, group, fd_levels);
-        INI_GETADD_LONG(ini, group, fd_iniThFAST);
-        INI_GETADD_LONG(ini, group, fd_minThFAST);
-        INI_GETADD_DOUBLE(ini, group, fd_scale_factor);
-        INI_GETADD_LONG(ini, group, fd_threads);
-        INI_GETADD_BOOL(ini, group, fd_bufferToFile);
-        INI_GETADD_BOOL(ini, group, fd_drawDebugImage);
-        INI_GETADD_BOOL(ini, group, fd_gpu);
-        INI_GETADD_BOOL(ini, group, fd_relaxed_stereo);
+        INI_GETADD(ini, group, fd_features);
+        INI_GETADD(ini, group, fd_levels);
+        INI_GETADD(ini, group, fd_iniThFAST);
+        INI_GETADD(ini, group, fd_minThFAST);
+        INI_GETADD(ini, group, fd_scale_factor);
+        INI_GETADD(ini, group, fd_threads);
+        INI_GETADD(ini, group, fd_bufferToFile);
+        INI_GETADD(ini, group, fd_drawDebugImage);
+        INI_GETADD(ini, group, fd_gpu);
+        INI_GETADD(ini, group, fd_relaxed_stereo);
     }
 
 
     {
         auto group = "Tracking";
-        INI_GETADD_LONG(ini, group, kfi_target_matches);
-        INI_GETADD_LONG(ini, group, th_map);
-        INI_GETADD_LONG(ini, group, initialization_quality);
+        INI_GETADD(ini, group, kfi_target_matches);
+        INI_GETADD(ini, group, th_map);
+        INI_GETADD(ini, group, initialization_quality);
     }
 
 
     {
         auto group = "IMU";
-        INI_GETADD_BOOL(ini, group, enable_imu);
-        INI_GETADD_DOUBLE(ini, group, weight_gyro_optimization);
-        INI_GETADD_DOUBLE(ini, group, weight_acc_optimization);
+        INI_GETADD(ini, group, enable_imu);
+        INI_GETADD(ini, group, weight_gyro_optimization);
+        INI_GETADD(ini, group, weight_acc_optimization);
     }
 
     if (ini.changed()) ini.SaveFile(file.c_str());

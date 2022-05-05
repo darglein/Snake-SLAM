@@ -148,12 +148,14 @@ void VisualFusion::Render(Camera* cam)
             {
                 int count = triangle_soup_inclusive_prefix_sum[blocks] ;
 
-                tri_asset->deferredShader->bind();
-                tri_asset->deferredShader->uploadModel(mat4::Identity());
-                tri_asset->unified_buffer->Bind();
-                tri_asset->unified_buffer->Draw(0, count);
-                tri_asset->unified_buffer->Unbind();
-                tri_asset->deferredShader->unbind();
+                if(tri_asset->deferredShader->bind())
+                {
+                    tri_asset->deferredShader->uploadModel(mat4::Identity());
+                    tri_asset->unified_buffer->Bind();
+                    tri_asset->unified_buffer->Draw(0, count);
+                    tri_asset->unified_buffer->Unbind();
+                    tri_asset->deferredShader->unbind();
+                }
             }
         }
         else

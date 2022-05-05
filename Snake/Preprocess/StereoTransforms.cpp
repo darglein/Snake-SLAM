@@ -57,13 +57,13 @@ void Rectify()
     // build my own rectification
     rect_left.K_src = stereo_intrinsics.model.K;
     rect_left.D_src = stereo_intrinsics.model.dis;
-    rect_left.K_dst = Intrinsics4(K1_new);
+    rect_left.K_dst = IntrinsicsPinholed(K1_new);
     rect_left.R     = Quat(R1_eig).normalized();
     rect_left.bf    = bf;
 
     rect_right.K_src = stereo_intrinsics.rightModel.K;
     rect_right.D_src = stereo_intrinsics.rightModel.dis;
-    rect_right.K_dst = Intrinsics4(K2_new);
+    rect_right.K_dst = IntrinsicsPinholed (K2_new);
     rect_right.R     = Quat(R2_eig).normalized();
     rect_right.bf    = bf;
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 
 set(LIB_NAME Snake)
-project(${LIB_NAME} VERSION 1.0.0 LANGUAGES CXX)
+project(${LIB_NAME} VERSION 1.0.0 LANGUAGES C CXX)
 
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -48,6 +48,16 @@ set(SAIGA_USE_SUBMODULES ON)
 set(SAIGA_BUILD_TESTS OFF)
 set(SAIGA_BUILD_SHARED ON)
 set(SAIGA_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin CACHE PATH "override saiga runtime output" FORCE)
+set(SAIGA_WITH_MKL OFF)
+set(SAIGA_WITH_FFMPEG OFF)
+set(SAIGA_WITH_FREETYPE OFF)
+set(SAIGA_WITH_OPENAL OFF)
+set(SAIGA_WITH_OPENMESH OFF)
+set(SAIGA_WITH_G2O OFF)
+set(SAIGA_WITH_CHOLMOD OFF)
+set(SAIGA_WITH_BULLET OFF)
+set(SAIGA_WITH_OPENVR OFF)
+set(SAIGA_WITH_OPENCV ON)
 add_subdirectory(External/saiga)
 
 #saiga
@@ -73,9 +83,6 @@ PackageHelperTarget(OpenMP::OpenMP_CXX OPENMP_FOUND)
 find_package(OpenCV REQUIRED QUIET)
 PackageHelper(OpenCV "${OpenCV_FOUND}" "${OpenCV_INCLUDE_DIRS}" "${OpenCV_LIBRARIES}")
 
-find_package(Filesystem REQUIRED)
-SET(SAIGA_USE_FILESYSTEM 1)
-PackageHelperTarget(std::filesystem FILESYSTEM_FOUND)
 
 
 include_directories(.)

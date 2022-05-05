@@ -8,8 +8,8 @@
 
 #include "saiga/core/image/ImageDraw.h"
 #include "saiga/core/imgui/imgui.h"
-#include "saiga/vision/opencv/opencv.h"
 #include "saiga/vision/camera/all.h"
+#include "saiga/vision/opencv/opencv.h"
 
 #include "Preprocess/StereoTransforms.h"
 #include "opencv2/imgproc.hpp"
@@ -127,6 +127,7 @@ void Input::CreateCamera()
                 mono_intrinsics = c->intrinsics();
             has_imu     = true;
             imu         = c->getIMU().value();
+            is_dataset  = true;
             camera_rgbd = std::move(c);
             break;
         }
@@ -139,6 +140,7 @@ void Input::CreateCamera()
             else
                 mono_intrinsics = c->intrinsics();
             camera_rgbd = std::move(c);
+            is_dataset  = true;
             break;
         }
         case SensorType::SCANNET:
@@ -152,6 +154,7 @@ void Input::CreateCamera()
             else
                 mono_intrinsics = c->intrinsics();
             camera_rgbd = std::move(c);
+            is_dataset  = true;
             break;
         }
         case SensorType::ZJU:
@@ -164,6 +167,7 @@ void Input::CreateCamera()
             has_imu         = true;
             imu             = c->getIMU().value();
             camera_mono     = std::move(c);
+            is_dataset      = true;
             break;
         }
         case SensorType::EUROC:
@@ -178,9 +182,9 @@ void Input::CreateCamera()
             else
                 mono_intrinsics = c->intrinsics;
             SAIGA_ASSERT(c->getIMU().has_value());
-            has_imu = true;
-            imu     = c->getIMU().value();
-
+            has_imu       = true;
+            imu           = c->getIMU().value();
+            is_dataset    = true;
             camera_stereo = std::move(c);
             break;
         }
@@ -195,6 +199,7 @@ void Input::CreateCamera()
             else
                 mono_intrinsics = c->intrinsics;
             camera_stereo = std::move(c);
+            is_dataset    = true;
             break;
         }
 #ifdef SAIGA_USE_K4A
@@ -211,6 +216,7 @@ void Input::CreateCamera()
             has_imu     = true;
             imu         = c->getIMU().value();
             camera_rgbd = std::move(c);
+            is_dataset  = false;
             break;
         }
 #endif

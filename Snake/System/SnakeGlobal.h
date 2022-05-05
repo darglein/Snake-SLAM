@@ -35,9 +35,9 @@ using Scalar = double;
 using Vec4   = Saiga::Vec4;
 using Vec3   = Saiga::Vec3;
 using Vec2   = Saiga::Vec2;
-using Vec4f  = Saiga::Vec4f;
-using Vec3f  = Saiga::Vec3f;
-using Vec2f  = Saiga::Vec2f;
+using Vec4f  = Saiga::vec4;
+using Vec3f  = Saiga::vec3;
+using Vec2f  = Saiga::vec2;
 using Mat4   = Saiga::Mat4;
 using Mat3   = Saiga::Mat3;
 using SE3    = Saiga::SE3;
@@ -72,8 +72,8 @@ using SmallMutex    = Saiga::DummyLock;
 using TSANOnlyMutex = std::mutex;
 #else
 // A mutex for low-contention sections
-using SmallMutex                    = Saiga::DummyLock;
-using TSANOnlyMutex                 = Saiga::DummyLock;
+using SmallMutex    = Saiga::DummyLock;
+using TSANOnlyMutex = Saiga::DummyLock;
 #endif
 
 
@@ -96,13 +96,14 @@ inline StereoIntrinsics stereo_intrinsics;
 inline RGBDIntrinsics rgbd_intrinsics;
 
 
-inline Intrinsics4& K = mono_intrinsics.model.K;
+inline IntrinsicsPinholed & K = mono_intrinsics.model.K;
 inline StereoCamera4 stereo_cam;
 
 inline Rectification rect_left;
 inline Rectification rect_right;
 
-inline bool has_imu = false;
+inline bool is_dataset = true;
+inline bool has_imu    = false;
 inline Imu::Sensor imu;
 
 

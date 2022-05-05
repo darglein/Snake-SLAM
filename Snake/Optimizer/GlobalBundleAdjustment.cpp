@@ -139,7 +139,7 @@ void GlobalBundleAdjustment::RealignIntermiediateFrames(bool ceres, bool with_im
         scene.bf = stereo_cam.bf;
     }
 
-    Intrinsics4 intr = K;
+    IntrinsicsPinholed intr = K;
     scene.intrinsics.push_back(intr);
 
     int maxKFid = 0;
@@ -346,7 +346,7 @@ void GlobalBundleAdjustment::MakeGlobalScene()
         scene.bf = stereo_cam.bf;
     }
 
-    Intrinsics4 intr = K;
+    IntrinsicsPinholed intr = K;
     scene.intrinsics.push_back(intr);
 
     //    kfmap.clear();
