@@ -41,7 +41,6 @@ SnakeOpenGLViewer::SnakeOpenGLViewer(const ViewerSettings& vparams, const std::s
     offset_camera.enableInput();
     offset_camera.movementSpeed     = 4 * scale;
     offset_camera.movementSpeedFast = 10 * scale;
-    offset_camera.mouseTurnLocal    = true;
     offset_camera.mousemap[0]       = GLFW_MOUSE_BUTTON_RIGHT;
     offset_camera.setPosition(defaultRelPosition);
     offset_camera.rot           = defaultRelRotation;

@@ -18,9 +18,12 @@ Download and install the following libraries before continuing with the build in
 ## Build Instructions (Ubuntu 20.04, Cuda 11.1)
 
 ```bash
+sudo apt install libyaml-cpp-dev
+
 cd Snake-SLAM
 git submodule update --init --recursive
 
+# Other compilers should also work here
 export CXX=clang++-10
 export CUDAHOSTCXX=g++-9
 
