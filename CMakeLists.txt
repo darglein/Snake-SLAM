@@ -70,6 +70,10 @@ if (NOT SAIGA_FOUND)
     message(FATAL_ERROR "Saiga not found D:")
 endif ()
 
+if(NOT ${SAIGA_USE_YAML_CPP})
+    message(FATAL_ERROR "The libyaml-cpp-dev package is required!")
+endif()
+
 if (SAIGA_CUDA_FOUND)
     set(SNAKE_CUDA 1)
     message(STATUS "Enable GPU Feature Detection")
